@@ -1,24 +1,80 @@
-import { ethers } from "hardhat";
+import { execSync } from "child_process"
+import { Contract } from "ethers"
+import { ethers } from "hardhat"
 
-async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+export async function deployMockAccountFactory(wETH: string): Promise<Contract> {
+  const MockAccountFactory = await ethers.getContractFactory("MockAccountFactory")
+  const mockAccountFactory = await MockAccountFactory.deploy(wETH)
 
-  const lockedAmount = ethers.utils.parseEther("0.001");
-
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(
-    `Lock with ${ethers.utils.formatEther(lockedAmount)}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  return await mockAccountFactory.deployed()
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+export async function deployAccountFactory(wETH: string): Promise<Contract> {
+  const AccountFactory = await ethers.getContractFactory("AccountFactory")
+  const accountFactory = await AccountFactory.deploy(wETH)
+
+  return await accountFactory.deployed()
+}
+
+export async function deployEntryPoint(accountFactory: string): Promise<Contract> {
+  const EntryPoint = await ethers.getContractFactory("EntryPoint")
+  const entryPoint = await EntryPoint.deploy(accountFactory)
+
+  return await entryPoint.deployed()
+}
+
+async function main() {
+  execSync("npx hardhat clean && yarn compile", { stdio: "inherit" })
+
+  const args = process.argv.slice(2)
+
+  if (args.length != 3) {
+    console.log("Deploy: Wrong arguments. The possible arguments are below.")
+    console.log("Deploy: ts-node ./scripts/deploy.ts polygonMumbai accountFactory wETH_address")
+    console.log("Deploy: ts-node ./scripts/deploy.ts polygonMumbai entryPoint accountFactory_address")
+    throw new Error("Wrong arguments")
+  }
+
+  const network = args[0]
+  const type = args[1]
+  const address = args[2]
+
+  const hre = require("hardhat")
+
+  await hre.changeNetwork(network)
+
+  console.log(`Deploy: start deploying ${type} on ${network}`)
+
+  let contract: Contract
+
+  if (type === "accountFactory") {
+    contract = await deployAccountFactory(address)
+  } else if (type === "entryPoint") {
+    contract = await deployEntryPoint(address)
+  } else {
+    console.log("Deploy: Wrong arguments. The second argument must be accountFactory or entryPoint.")
+    throw new Error("Wrong arguments")
+  }
+
+  console.log(`Deploy: ${type} is deployed at ${contract.address}`)
+
+  console.log(`Deploy: wait 1 min to let this fact be propagated`)
+
+  await new Promise((timeout) => setTimeout(timeout, 60000))
+
+  console.log(`Deploy: start verifying it`)
+
+  await hre.run("verify:verify", {
+    address: contract.address,
+    constructorArguments: [address],
+  })
+}
+
+if (require.main === module) {
+  main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error)
+      process.exit(1)
+    })
+}
