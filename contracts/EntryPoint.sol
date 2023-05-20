@@ -19,11 +19,15 @@ contract EntryPoint is IEntryPoint {
             address sender = op.sender;
 
             if (sender == address(0)) {
-                sender = accountFactory.createAccount();
+                sender = accountFactory.createAccount(op.commitment);
+            }
+
+            try IAccount(sender).validateUserOp(op) returns (uint256) {} catch {
+                revert("EntryPoint: invalid UserOperationVariant");
             }
 
             require(
-                IAccount(sender).verify(op.proof),
+                IAccount(sender).verify(op.commitment, op.proof),
                 "EntryPoint: invalid proof"
             );
 

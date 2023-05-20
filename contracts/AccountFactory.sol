@@ -11,7 +11,9 @@ contract AccountFactory is IAccountFactory {
         wETH = _wETH;
     }
 
-    function createAccount() external returns (address account) {
-        account = address(new Account(wETH));
+    function createAccount(
+        bytes calldata _commitment
+    ) external returns (address account) {
+        account = address(new Account(wETH, _commitment));
     }
 }

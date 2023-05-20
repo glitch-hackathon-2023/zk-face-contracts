@@ -10,6 +10,7 @@ export async function createAccount(entryPointAddress: string) {
   const userOpCreateAccount: UserOperationVariant = {
     sender: "0x0000000000000000000000000000000000000000",
     callData: "0x",
+    commitment: "0x",
     proof: "0x",
     callGasLimit: 30_000_000,
   }
@@ -83,6 +84,7 @@ export async function swap(entryPointAddress: string, userAccount: string) {
   const userOpCallSwapFunc: UserOperationVariant = {
     sender: userAccount,
     callData: callData,
+    commitment: "0x",
     proof: "0x",
     callGasLimit: 30_000_000,
   }

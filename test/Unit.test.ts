@@ -34,6 +34,7 @@ describe("Unit test", function () {
       const userOpCreateAccount: UserOperationVariant = {
         sender: "0x0000000000000000000000000000000000000000",
         callData: "0x",
+        commitment: "0x",
         proof: "0x",
         callGasLimit: 30_000_000,
       }
@@ -104,6 +105,7 @@ describe("Unit test", function () {
       const userOpCallSwapFunc: UserOperationVariant = {
         sender: userAccount,
         callData: callData,
+        commitment: "0x",
         proof: "0x",
         callGasLimit: 30_000_000,
       }

@@ -10,19 +10,32 @@ contract Account is IAccount {
     event AccountCreated(address addr);
 
     address public immutable wETH;
+    bytes public originCommitment;
+    CommitmentProof[] public commitmentProof;
 
-    constructor(address _wETH) {
+    constructor(address _wETH, bytes memory _commitment) {
         wETH = _wETH;
+        originCommitment = _commitment;
 
         emit AccountCreated(address(this));
     }
 
     receive() external payable {}
 
-    function validateUserOp(UserOperationVariant calldata userOp) external {}
+    function validateUserOp(
+        UserOperationVariant calldata userOp
+    ) external returns (uint256 validationData) {}
 
-    function verify(bytes calldata proof) external view returns (bool) {
-        // TODO: Not implemented.
+    function verify(
+        bytes calldata commitment,
+        bytes calldata proof
+    ) external returns (bool) {
+        // NOTE: Verify(commitment, proof) returns true if the proof is valid and false otherwise.
+        // However, verifying a proof went over 30_000_000 gas so it was impossible to do it on-chain.
+        // Hence, in this PoC, we validate off-chain and publicly record commitments and proofs
+        // so that anyone can detect a fruad if there is any.
+        commitmentProof.push(CommitmentProof(commitment, proof));
+
         return true;
     }
 

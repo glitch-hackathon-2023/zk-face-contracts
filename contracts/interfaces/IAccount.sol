@@ -4,7 +4,17 @@ pragma solidity ^0.8.18;
 import { UserOperationVariant } from "./UserOperationVariant.sol";
 
 interface IAccount {
-    function validateUserOp(UserOperationVariant calldata userOp) external;
+    struct CommitmentProof {
+        bytes commitment;
+        bytes proof;
+    }
 
-    function verify(bytes calldata proof) external view returns (bool);
+    function validateUserOp(
+        UserOperationVariant calldata userOp
+    ) external returns (uint256 validationData);
+
+    function verify(
+        bytes calldata commitment,
+        bytes calldata proof
+    ) external returns (bool);
 }
