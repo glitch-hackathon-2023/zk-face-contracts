@@ -5,8 +5,8 @@ import { UserOperationVariant } from "../scripts/interfaces/component"
 
 describe("Unit test", function () {
   before(async function () {
-    // wMATIC on Polygon Mumbai.
-    this.wETH = "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889"
+    //  on Moonbase
+    this.wETH = "0xD909178CC99d318e4D46e7E66a972955859670E1"
 
     this.user = (await ethers.getSigners())[0]
 
@@ -97,8 +97,8 @@ describe("Unit test", function () {
         "0xE592427A0AEce92De3Edee1F18E0157C05861564",
         ethers.utils.parseEther("0.01"),
         0,
-        "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889", // wMATIC
-        "0xF14f9596430931E177469715c591513308244e8F", // DAI
+        // "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889", // wMATIC
+        // "0xF14f9596430931E177469715c591513308244e8F", // DAI
         3000,
       ])
 

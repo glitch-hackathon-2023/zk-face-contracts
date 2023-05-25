@@ -30,8 +30,8 @@ async function main() {
 
   if (args.length != 3) {
     console.log("Deploy: Wrong arguments. The possible arguments are below.")
-    console.log("Deploy: ts-node ./scripts/deploy.ts polygonMumbai accountFactory wETH_address")
-    console.log("Deploy: ts-node ./scripts/deploy.ts polygonMumbai entryPoint accountFactory_address")
+    console.log("Deploy: ts-node ./scripts/deploy.ts moonbase accountFactory wETH_address")
+    console.log("Deploy: ts-node ./scripts/deploy.ts moonbase entryPoint accountFactory_address")
     throw new Error("Wrong arguments")
   }
 
