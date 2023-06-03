@@ -2,16 +2,16 @@ import { execSync } from "child_process"
 import { Contract } from "ethers"
 import { ethers } from "hardhat"
 
-export async function deployMockAccountFactory(wETH: string): Promise<Contract> {
+export async function deployMockAccountFactory(wETH: string, worldIDRouter: string): Promise<Contract> {
   const MockAccountFactory = await ethers.getContractFactory("MockAccountFactory")
-  const mockAccountFactory = await MockAccountFactory.deploy(wETH)
+  const mockAccountFactory = await MockAccountFactory.deploy(wETH, worldIDRouter)
 
   return await mockAccountFactory.deployed()
 }
 
-export async function deployAccountFactory(wETH: string): Promise<Contract> {
+export async function deployAccountFactory(wETH: string, worldIDRouter: string): Promise<Contract> {
   const AccountFactory = await ethers.getContractFactory("AccountFactory")
-  const accountFactory = await AccountFactory.deploy(wETH)
+  const accountFactory = await AccountFactory.deploy(wETH, worldIDRouter)
 
   return await accountFactory.deployed()
 }
@@ -28,16 +28,17 @@ async function main() {
 
   const args = process.argv.slice(2)
 
-  if (args.length != 3) {
+  if (args.length > 4) {
     console.log("Deploy: Wrong arguments. The possible arguments are below.")
-    console.log("Deploy: ts-node ./scripts/deploy.ts moonbase accountFactory wETH_address")
-    console.log("Deploy: ts-node ./scripts/deploy.ts moonbase entryPoint accountFactory_address")
+    console.log("Deploy: ts-node ./scripts/deploy.ts polygon accountFactory wETH_address worldIDRouter_address")
+    console.log("Deploy: ts-node ./scripts/deploy.ts polygon entryPoint accountFactory_address")
     throw new Error("Wrong arguments")
   }
 
   const network = args[0]
   const type = args[1]
-  const address = args[2]
+  const wETHAddr = args[2]
+  const worldIDRouterAddr = args[3]
 
   const hre = require("hardhat")
 
@@ -48,9 +49,9 @@ async function main() {
   let contract: Contract
 
   if (type === "accountFactory") {
-    contract = await deployAccountFactory(address)
+    contract = await deployAccountFactory(wETHAddr, worldIDRouterAddr)
   } else if (type === "entryPoint") {
-    contract = await deployEntryPoint(address)
+    contract = await deployEntryPoint(wETHAddr)
   } else {
     console.log("Deploy: Wrong arguments. The second argument must be accountFactory or entryPoint.")
     throw new Error("Wrong arguments")
@@ -64,10 +65,20 @@ async function main() {
 
   console.log(`Deploy: start verifying it`)
 
-  await hre.run("verify:verify", {
-    address: contract.address,
-    constructorArguments: [address],
-  })
+  if (type === "accountFactory") {
+    await hre.run("verify:verify", {
+      address: contract.address,
+      constructorArguments: [wETHAddr, worldIDRouterAddr],
+    })
+  } else if (type === "entryPoint") {
+    await hre.run("verify:verify", {
+      address: contract.address,
+      constructorArguments: [wETHAddr],
+    })
+  } else {
+    console.log("Deploy: Wrong arguments. The second argument must be accountFactory or entryPoint.")
+    throw new Error("Wrong arguments")
+  }
 }
 
 if (require.main === module) {

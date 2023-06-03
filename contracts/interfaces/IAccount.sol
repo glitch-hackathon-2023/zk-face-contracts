@@ -2,6 +2,7 @@
 pragma solidity ^0.8.18;
 
 import { UserOperationVariant } from "./UserOperationVariant.sol";
+import { WorldIDVerification } from "./WorldIDVerification.sol";
 
 interface IAccount {
     struct CommitmentProof {
@@ -14,7 +15,6 @@ interface IAccount {
     ) external returns (uint256 validationData);
 
     function verify(
-        bytes calldata commitment,
-        bytes calldata proof
+        WorldIDVerification calldata worldIDVerification
     ) external returns (bool);
 }

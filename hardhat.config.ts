@@ -30,7 +30,7 @@ const config: HardhatUserConfig = {
       forking: {
         url: "https://rpc.ankr.com/polygon",
         enabled: true,
-        // blockNumber: 43490959,
+        blockNumber: 43491969,
       },
     },
     localhost: {
@@ -54,8 +54,9 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
+      polygon: `${process.env.POLYGON_SCAN_API_KEY}`,
       polygonMumbai: `${process.env.POLYGON_SCAN_API_KEY}`,
-      moonbase: `${process.env.MOONBASE_RPC_URL}`,
+      moonbaseAlpha: `${process.env.MOONBASE_RPC_URL}`,
     },
   },
 }

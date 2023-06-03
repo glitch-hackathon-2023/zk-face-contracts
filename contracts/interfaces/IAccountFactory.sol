@@ -2,7 +2,5 @@
 pragma solidity ^0.8.18;
 
 interface IAccountFactory {
-    function createAccount(
-        bytes calldata _commitment
-    ) external returns (address);
+    function createAccount() external returns (address);
 }

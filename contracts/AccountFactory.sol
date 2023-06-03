@@ -6,14 +6,14 @@ import { Account } from "./Account.sol";
 
 contract AccountFactory is IAccountFactory {
     address public immutable wETH;
+    address public immutable worldIDRouter;
 
-    constructor(address _wETH) {
+    constructor(address _wETH, address _worldIDRouter) {
         wETH = _wETH;
+        worldIDRouter = _worldIDRouter;
     }
 
-    function createAccount(
-        bytes calldata _commitment
-    ) external returns (address account) {
-        account = address(new Account(wETH, _commitment));
+    function createAccount() external returns (address account) {
+        account = address(new Account(wETH, worldIDRouter));
     }
 }
