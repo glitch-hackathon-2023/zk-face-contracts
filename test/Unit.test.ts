@@ -1,8 +1,10 @@
 import { setBalance, takeSnapshot } from "@nomicfoundation/hardhat-network-helpers"
-import { solidityEncode } from "@worldcoin/idkit"
 import { expect } from "chai"
 import { ethers } from "hardhat"
 import { deployEntryPoint, deployMockAccountFactory } from "../scripts/deploy"
+
+import { solidityEncode } from '@worldcoin/idkit'
+
 
 describe("Unit test", function () {
   before(async function () {
@@ -23,17 +25,20 @@ describe("Unit test", function () {
     // World ID proof.
     this.merkleRoot = await ethers.utils.defaultAbiCoder.decode(
       ["uint256"],
-      "0x13884656763e3f95f96aac8109832ee4e10deeb9fd8d7e6ac442523a14110da8"
+      "0x1a8e50d7070f41529d44a62a476819f34207317930ab4cca740c6232fdce4ed6"
     )[0]
     this.nullifierHash = await ethers.utils.defaultAbiCoder.decode(
       ["uint256"],
-      "0x2c75a3db70790d1363cd617033f78cc201f57d3c2141fb871510efaccd7db573"
+      "0x1ca39bc0e45f8f09fd02907d374fd6b5c22f5bad4478b0ba715e842122596087"
     )[0]
     this.proof = await ethers.utils.defaultAbiCoder.decode(
       ["uint256[8]"],
-      "0x1d076b755824e45cb178407167f8ead55207468e39885de75009fe382197877818d1a101ed10bb03fb6cf7dd17330f051364c8d627dbaeb99d8ee9c428b5e86c1ffc830922ca5537681ef8b9e9d3f412e2464b80e13db4c56a49e93b8616bd4c12f41871663712b3419ec397f3dbcce80f3534355fa7700551db412b1fcf2f792f7e0f5a94d649416abb50d43a5a4b869e44972e4f268b71f4e68c687c03d69d0bc70092cc56a469d6bbdb53a0b3028904e55ceb87871a4b2d20f493ad63edaf078c9752ecf444cb3e6e83b4cea82d7e3bd7630bd124be38b2738f99d11cd0ff1fb79d6d3ad1832c2b0ece7345f06fe22e47dd9af9036eeef17f38ec6bc7e992"
+      "0x0fd3e28301df0cc38fd7c5961e5dc387cb768fcaa74f2cafc171c5f53ec43e7e22c9f0f19c2f81681a48d021b63adc030995c9e76162c6383a735985cb00f6f8093deaceb1f82e96f786417df57176bfc192e249457e9c30a49db99170780ab52aed546ac321b54ea54e224c8c5b8e37c37e4e777434c809c3ac2b22a973136119437700c5e4ee9bceef5b5aaef57120859272eed04af4f6674b4f7d354e8c212b6e02a453c115e0a65ab4327bdef62adc684b48df39a91dc02ea494d75bd5cc1df0d0e0b223a9261e14a3a02b745c740c078c5c8682ee6bdbc00d5b8de436df0b6be0465a069c00c758e583ee17604cdfc84d7c41f62c718fde2ae6508fb60c"
     )[0]
-    // this.signal = solidityEncode(["address"], ["0x7730809Fde523F8A8b064787Aa32Eb0df40768fC"])
+
+    console.log(this.merkleRoot)
+    console.log(this.nullifierHash)
+    console.log(this.proof)
 
     // Take snapshot.
     this.snapshot = await takeSnapshot()
@@ -46,9 +51,8 @@ describe("Unit test", function () {
 
   describe("Swap", async function () {
     it("should succeed to verify World ID", async function () {
-      expect(
-        await this.entryPoint.connect(this.user).verify(this.merkleRoot,  this.nullifierHash, this.proof)
-      ).not.to.be.reverted
+      expect(await this.entryPoint.connect(this.user).verify(this.merkleRoot, this.nullifierHash, this.proof)).not.to.be
+        .reverted
     })
 
     // it("should succeed when create account and call swap function", async function () {

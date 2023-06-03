@@ -7,6 +7,7 @@ import { IAccount } from "./interfaces/IAccount.sol";
 import { IAccountFactory } from "./interfaces/IAccountFactory.sol";
 import { IWorldIDGroups } from "./interfaces/IWorldIDGroups.sol";
 
+import "hardhat/console.sol";
 contract EntryPoint is IEntryPoint {
     using ByteHasher for bytes;
 
@@ -23,13 +24,21 @@ contract EntryPoint is IEntryPoint {
         // uint256 externalNullifierHash,
         uint256[8] calldata proof
     ) external {
-        IWorldIDGroups(address(0x719683F13Eeea7D84fCBa5d7d17Bf82e03E3d260))
+        uint256 signalHash = abi.encodePacked("0x8285435a393708d0175b470432c96c7413f6bf6a").hashToField();
+        uint256 externalNullifierHash = abi
+            .encodePacked(abi.encodePacked("app_f7ca6efaaf1e9e24b52eae383e484306").hashToField(), "test_2")
+            .hashToField();
+
+        console.log(signalHash);
+        console.log(externalNullifierHash);
+
+        IWorldIDGroups(address(0x515f06B36E6D3b707eAecBdeD18d8B384944c87f))
             .verifyProof(
                 root,
-                0, // Or `0` if you want to check for phone verification only
-                abi.encodePacked("0x7730809Fde523F8A8b064787Aa32Eb0df40768fC").hashToField(),
+                1, // Or `0` if you want to check for phone verification only
+                signalHash,
                 nullifierHash,
-                abi.encodePacked("app_staging_23b713ea1ef2e814d19b3550de74409f").hashToField(),
+                externalNullifierHash,
                 proof
             );
     }
