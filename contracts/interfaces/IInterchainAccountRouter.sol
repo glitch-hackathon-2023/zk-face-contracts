@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity >=0.6.11;
 
-import {CallLib} from "hyperlane/Call.sol";
+import { CallLib } from "../../lib/hyperlane/src/Call.sol";
 
 interface IInterchainAccountRouter {
     function callRemote(
@@ -9,8 +9,8 @@ interface IInterchainAccountRouter {
         CallLib.Call[] calldata calls
     ) external returns (bytes32);
 
-    function getRemoteInterchainAccount(uint32 _destination, address _owner)
-        external
-        view
-        returns (address);
+    function getRemoteInterchainAccount(
+        uint32 _destination,
+        address _owner
+    ) external view returns (address);
 }

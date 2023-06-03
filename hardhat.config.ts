@@ -28,13 +28,18 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: true,
       blockGasLimit: 30_000_000,
       forking: {
-        url: "https://moonbase-alpha.public.blastapi.io",
+        url: "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78",
         enabled: true,
-        blockNumber: 4417000,
+        blockNumber: 36388800,
       },
     },
     localhost: {
       url: "http://127.0.0.1:8545/",
+    },
+    polygonMumbai: {
+      url: "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78",
+      chainId: 80001,
+      accounts: [`0x${process.env.PRIVATE_KEY}`],
     },
     moonbase: {
       url: "https://rpc.api.moonbase.moonbeam.network",
@@ -44,9 +49,8 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
+      polygonMumbai: `${process.env.POLYGON_SCAN_API_KEY}`,
       moonbase: `${process.env.MOONBASE_RPC_URL}`,
-      url: "https://moonbase.moonscan.io/api",
-      chain: "1287"
     },
   },
 }
