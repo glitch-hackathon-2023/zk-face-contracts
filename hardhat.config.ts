@@ -30,7 +30,7 @@ const config: HardhatUserConfig = {
       forking: {
         url: "https://rpc.ankr.com/polygon",
         enabled: true,
-        blockNumber: 43489000,
+        blockNumber: 43490959,
       },
     },
     localhost: {

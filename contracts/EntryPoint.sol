@@ -24,9 +24,9 @@ contract EntryPoint is IEntryPoint {
         // uint256 externalNullifierHash,
         uint256[8] calldata proof
     ) external {
-        uint256 signalHash = abi.encodePacked("0x8285435a393708d0175b470432c96c7413f6bf6a").hashToField();
+        uint256 signalHash = abi.encodePacked("my_signal").hashToField();
         uint256 externalNullifierHash = abi
-            .encodePacked(abi.encodePacked("app_f7ca6efaaf1e9e24b52eae383e484306").hashToField(), "test_2")
+            .encodePacked(abi.encodePacked("app_5bf8fcd0369d5ac0ec85529e347b5d57").hashToField(), "test_2")
             .hashToField();
 
         console.log(signalHash);
